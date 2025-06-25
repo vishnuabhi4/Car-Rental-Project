@@ -1,5 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleDarkMode } from '../../store/themeSlice';
+import { Sun } from 'lucide-react';
+import { Moon } from 'lucide-react';
 
 export default function ThemeToggle() {
   const dispatch = useDispatch();
@@ -8,9 +10,9 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => dispatch(toggleDarkMode())}
-      className="px-4 py-2 rounded bg-blue-600 text-white dark:bg-yellow-400 dark:text-black transition"
+      className="px-4 py-2 rounded-md bg-blue-600 text-white dark:bg-yellow-400 dark:text-black transition"
     >
-      Toggle {darkMode ? 'Light' : 'Dark'} Mode
+       {darkMode ? (<Sun/>) : (<Moon/>)} 
     </button>
   );
 }
