@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { users } from '../../Data/Users';
+import { users } from '../Data/Users';
 
 const LoginForm = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -9,14 +9,18 @@ const LoginForm = ({ onLogin }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const user = users.find(
-      (u) => u.username === username && u.password === password
-    );
+    (u) => u.username === username && u.password === password
+  );
 
-    if (user) {
-      onLogin(user);
-    } else {
-      setError('Invalid username or password');
-    }
+  if (user) {
+    // Save to localStorage
+    localStorage.setItem('user', JSON.stringify(user));
+
+    // Call parent handler to save user to Redux
+    onLogin(user);
+  } else {
+    setError('Invalid username or password');
+  }
   };
 
   return (
@@ -47,7 +51,7 @@ const LoginForm = ({ onLogin }) => {
             <input
               type="password"
               id="password"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-black px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

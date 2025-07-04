@@ -1,29 +1,42 @@
-import React from 'react';
-import { Star, Users, Fuel, Settings, MapPin } from 'lucide-react';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Star, Users, Fuel, Settings, MapPin } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../store/cartSlice";
 
 const CarRentalCard = ({ car }) => {
+  const dispatch = useDispatch();
+  const handleCart = () => {
+    dispatch(addToCart(car));
+    alert('Added to cart')
+  };
+
   return (
-    <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 group">
+    <div className="bg-white rounded-2xl dark:bg-gray-600 dark:text-white dark:shadow-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 group">
       {/* Image Section */}
       <div className="relative overflow-hidden">
-        <img 
-          src={car.image} 
+        <img
+          src={car.images[0]}
           alt={car.name}
           className="w-full h-48 sm:h-52 object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute top-3 left-3">
-          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-            car.available 
-              ? 'bg-green-100 text-green-800' 
-              : 'bg-red-100 text-red-800'
-          }`}>
-            {car.available ? 'Available' : 'Booked'}
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-semibold ${
+              car.available
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {car.available ? "Available" : "Booked"}
           </span>
         </div>
         <div className="absolute top-3 right-3">
           <div className="bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 flex items-center gap-1">
             <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs font-semibold text-gray-700">{car.rating}</span>
+            <span className="text-xs font-semibold text-gray-700">
+              {car.rating}
+            </span>
           </div>
         </div>
       </div>
@@ -62,7 +75,7 @@ const CarRentalCard = ({ car }) => {
         <div className="mb-4">
           <div className="flex flex-wrap gap-1">
             {car.features.slice(0, 3).map((feature, index) => (
-              <span 
+              <span
                 key={index}
                 className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md"
               >
@@ -81,13 +94,13 @@ const CarRentalCard = ({ car }) => {
         <div className="flex items-center gap-2 mb-4">
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, i) => (
-              <Star 
-                key={i} 
+              <Star
+                key={i}
                 className={`w-3 h-3 ${
-                  i < Math.floor(car.rating) 
-                    ? 'fill-yellow-400 text-yellow-400' 
-                    : 'text-gray-300'
-                }`} 
+                  i < Math.floor(car.rating)
+                    ? "fill-yellow-400 text-yellow-400"
+                    : "text-gray-300"
+                }`}
               />
             ))}
           </div>
@@ -98,23 +111,35 @@ const CarRentalCard = ({ car }) => {
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-bold text-gray-900">${car.pricePerDay}</span>
+              <span className="text-2xl font-bold text-gray-900">
+                ${car.pricePerDay}
+              </span>
               <span className="text-sm text-gray-500">/day</span>
             </div>
           </div>
-          <button 
-            className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 ${
-              car.available
-                ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg'
-                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-            }`}
-            disabled={!car.available}
-          >
-            {car.available ? 'Book Now' : 'Unavailable'}
-          </button>
+          <div className="text-sm">
+            <button
+              onClick={handleCart}
+              className="bg-blue-600 text-white px-3 py-3 font-semibold rounded-xl"
+            >
+              Add to cart
+            </button>
+          </div>
+          <Link to={`/cars/${car.id}`} className="block">
+            <div
+              className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 ${
+                car.available
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "bg-gray-200 text-gray-500"
+              }`}
+            >
+              {car.available ? "Book Now" : "Unavailable"}
+            </div>
+          </Link>
         </div>
       </div>
     </div>
   );
 };
-export default CarRentalCard
+
+export default CarRentalCard;

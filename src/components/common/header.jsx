@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import ThemeToggle from '../ui/themeToggle';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../../store/authSlice'
+import { useNavigate } from 'react-router-dom';
 
-export default function Header({ onLoginClick, onSignupClick, user, onLogout }) {
+
+export default function Header({ onLoginClick, onSignupClick }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+  const dispatch = useDispatch();
+const user = useSelector((state) => state.auth.user);
+const navigateTo = useNavigate()
+
 
   return (
-    <header className="bg-gray-50 dark:bg-gray-800 dark:text-white shadow-sm border-b border-gray-100 dark:border-gray-800">
+    <header className="bg-gray-50 dark:bg-gray-800 dark:text-white shadow-sm border-b border-gray-100 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -25,8 +33,9 @@ export default function Header({ onLoginClick, onSignupClick, user, onLogout }) 
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <button className="text-gray-700 dark:bg-gray-800 dark:text-white hover:text-blue-600 font-medium transition-colors duration-200">
-              Become a Host
+            <button onClick={()=>navigateTo('/')} className='text-gray-700 dark:bg-gray-800 dark:text-white hover:text-blue-600 font-medium transition-colors duration-200'>Home</button>
+            <button onClick={()=>navigateTo('/cart')} className="text-gray-700 dark:bg-gray-800 dark:text-white hover:text-blue-600 font-medium transition-colors duration-200">
+              Cart
             </button>
             
             <div className="flex items-center space-x-3">
@@ -34,7 +43,7 @@ export default function Header({ onLoginClick, onSignupClick, user, onLogout }) 
                 <>
                   <span className="text-gray-700 dark:text-white">Welcome, {user.username}</span>
                   <button 
-                    onClick={onLogout}
+                    onClick={() => dispatch(logout())}
                     className="text-gray-700 dark:bg-gray-800 dark:text-white hover:text-blue-600 font-medium transition-colors duration-200"
                   >
                     Logout
@@ -49,11 +58,8 @@ export default function Header({ onLoginClick, onSignupClick, user, onLogout }) 
                     Login
                   </button>
                   <span className="text-gray-300 dark:bg-gray-800 dark:text-white">|</span>
-                  <button 
-                    onClick={onSignupClick}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
-                  >
-                    Sign Up
+                  <button onClick={()=>navigateTo('/about')} className='text-gray-700 dark:bg-gray-800 dark:text-white hover:text-blue-600 font-medium transition-colors duration-200'>
+                    About us
                   </button>
                 </>
               )}
@@ -80,9 +86,6 @@ export default function Header({ onLoginClick, onSignupClick, user, onLogout }) 
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-gray-100">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white dark:bg-gray-800 dark:text-white">
-              <button className="block w-full text-left px-3 py-2 text-black dark:bg-gray-800 dark:text-white font-semibold hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors duration-200">
-                Become a Host
-              </button>
               <div className="border-t border-gray-100 pt-2">
                 {user ? (
                   <>
@@ -100,15 +103,15 @@ export default function Header({ onLoginClick, onSignupClick, user, onLogout }) 
                   <>
                     <button 
                       onClick={onLoginClick}
-                      className="block w-full text-left px-3 py-2 bg-blue-600 text-white dark:bg-gray-800 dark:text-white hover:bg-blue-700 rounded-md font-medium transition-colors duration-200"
+                      className="block w-1/2 text-left px-3 py-2 bg-blue-600 text-white dark:bg-gray-800 dark:text-white hover:bg-blue-700 rounded-md font-medium transition-colors duration-200"
                     >
                       Login
                     </button>
                     <button 
-                      onClick={onSignupClick}
-                      className="block w-full text-left px-3 py-2 bg-blue-600 dark:bg-gray-800 dark:text-white hover:bg-blue-700 text-white rounded-md font-medium transition-colors duration-200 mt-1"
+                      onClick={()=>navigateTo('/about')}
+                      className="block w-1/2 text-left px-2 py-2 mb-1 bg-blue-600 dark:bg-gray-800 dark:text-white hover:bg-blue-700 text-white rounded-md font-medium transition-colors duration-200 mt-1"
                     >
-                      Sign Up
+                      About Us
                     </button>
                   </>
                 )}

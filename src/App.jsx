@@ -1,74 +1,99 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import Header from './components/common/header';
-import Footer from './components/common/footer';
-import './App.css'
-import CarSlider from './components/ui/Slider';
-import CarRentalDisplay from './components/ui/CarRentalDisplay';
-import { Car } from 'lucide-react';
-import CarRentalCard from './components/Cards/CarRentalCard';
-import AuthFlow from './components/AuthFlow';
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { createBrowserRouter, RouterProvider, Navigate} from "react-router-dom";
+import ProtectedRoute from "./Healpers/ProtectedRoute";
+import Layout from "./components/LayoutArrangments";
+import Home from "./pages/Home/Home";
+import ErrorPage from "./pages/ErrorPage";
+import Dashboard from "./components/Dashboard/LoginDashboard";
+import { applyDarkMode } from "./Healpers/theme";
+import { handleLogin, handleLogout, showLoginModal, closeLoginModal } from "./Healpers/auth";
+import CarBookingPage from "./pages/CarBookingPage";
+import CarCatalogue from "./pages/CarCatalogue";
+import Cart from "./components/Cart";
+import AboutUs from "./pages/AboutUs";
 
+import "./App.css";
 
 function App() {
-//  darkMode initial
+   //Dark mode
   const darkMode = useSelector((state) => state.theme.darkMode);
   useEffect(() => {
-    const root = document.documentElement;
-    darkMode ? root.classList.add('dark') : root.classList.remove('dark');
+    applyDarkMode(darkMode);
   }, [darkMode]);
-//  darkMode end
-//Login start
-   const [user, setUser] = useState(null);
+
+   //Auth state
+  const [user, setUser] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
 
-  const handleLogin = (userData) => {
-    setUser(userData);
-    setShowLogin(false);
-  };
+  const login = (userData) => handleLogin(setUser, setShowLogin, userData);
+  const logout = () => handleLogout(setUser);
+  const openLogin = () => showLoginModal(setShowLogin);
+  const closeLogin = () => closeLoginModal(setShowLogin);
 
-  const handleLogout = () => {
-    setUser(null);
-  };
+   // Router setup
+  const router = createBrowserRouter([
+    {
+      path: "/",
+       errorElement: <ErrorPage />,
+      element: (
+        <Layout
+          onLoginClick={openLogin}
+          onSignupClick={openLogin} // assuming login/signup share modal
+          onLogout={logout}
+        />
+      ),
+      children: [
+        {
+          index: true,
+          element: (
+            <Home
+              showLogin={showLogin}
+              onLogin={login}
+              onLogout={logout}
+              onCloseLogin={closeLogin}
+            />
+          ),
+        },
+        {
+          path:"home",
+          element:<Layout />
+        },
+        {
+          path: "errorpage",
+          element: <ErrorPage />,
+        },
+        {
+          path: "dashboard",
+          element: (
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          ),
+        },
+          {
+        path: "cars",           
+        element: <CarCatalogue />,
+      },
+        {
+    path: "/cars/:id",
+    element: <CarBookingPage />,
+  },{
+    path:"/cart",
+    element:(
+      <ProtectedRoute>
+        <Cart />
+      </ProtectedRoute>
+    )
+  },{
+    path:'/about',
+    element:<AboutUs />
+  }
+      ],
+    },
+  ]);
 
-  const handleLoginClick = () => {
-    setShowLogin(true);
-  };
-
-  const handleCloseLogin = () => {
-    setShowLogin(false);
-  };
-
-  return (
-    <>
-     <div className="app-container transition duration-300">
-       <Header 
-        user={user}
-        onLoginClick={() => setShowLogin(true)}
-        onSignupClick={() => setShowSignup(true)}
-        onLogout={handleLogout}
-      />
-      <main >
-        <div className="App">
-      
-      
-      <AuthFlow
-        user={user}
-        showLogin={showLogin}
-        onLogin={handleLogin}
-        onLogout={handleLogout}
-        onCloseLogin={handleCloseLogin}
-      />
-    </div>
-    <CarSlider />
-    <CarRentalDisplay />
-      </main>
-      <Footer />
-      </div>
-   
-    </>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
