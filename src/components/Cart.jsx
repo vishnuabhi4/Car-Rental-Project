@@ -14,9 +14,9 @@ const cartDetails = cartItems
 
     return {
       id: car.id,
-      title: car.name,               // 👈 renamed
-      image: car.images[0] || null,  // 👈 first image
-      price: car.pricePerDay,        // 👈 renamed
+      title: car.name,               
+      image: car.images[0] || null,  
+      price: car.pricePerDay,        
       quantity: item.quantity,
     };
   })
