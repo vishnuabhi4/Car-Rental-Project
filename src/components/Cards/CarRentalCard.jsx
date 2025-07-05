@@ -3,12 +3,16 @@ import { Link } from "react-router-dom";
 import { Star, Users, Fuel, Settings, MapPin } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../store/cartSlice";
+import { useSelector } from 'react-redux';
 
 const CarRentalCard = ({ car }) => {
+
+  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const handleCart = () => {
     dispatch(addToCart(car));
-    alert('Added to cart')
+    if(user)alert('added to cart')
+      if(!user)alert('login to add the product into cart')
   };
 
   return (
