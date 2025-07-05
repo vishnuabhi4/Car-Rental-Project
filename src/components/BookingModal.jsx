@@ -1,19 +1,9 @@
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React from 'react';
+
 
 const BookingModal = ({ isOpen, totalPrice, onClose, onConfirm }) => {
   if (!isOpen) return null;
-    const user = useSelector((state)=>state.auth.user);
 
-  useEffect(()=>{
-    if(isOpen && !user){
-      alert('please login to book the car');
-      onClose()
-    }
-  },[isOpen, user, onClose])
-
-
-  if (!isOpen || !user) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
