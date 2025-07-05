@@ -5,6 +5,7 @@ import { ArrowLeft, Star, Users, Fuel, Settings, MapPin, Shield, Calendar, Clock
 import {useNavigate} from 'react-router-dom'
 import { useEffect } from "react";
 import BookingModal from "../components/BookingModal";
+import { useSelector } from "react-redux";
 
 
 
@@ -12,10 +13,14 @@ const CarBookingPage = () => {
   const { id } = useParams();
   const navigateTo = useNavigate();
   const car = cars.find((i) => i.id === parseInt(id));
-
+ const user = useSelector((state)=>state.auth.user)
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 const handleBookNow = () => {
+      if (!user) {
+    alert("Please log in to book a car.");
+    return;
+  }
   setIsModalOpen(true);
 };
 
