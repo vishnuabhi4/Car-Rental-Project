@@ -1,4 +1,3 @@
-// components/LayoutArrangments.jsx
 import { Outlet } from "react-router-dom";
 import Header from "./common/header";
 import Footer from "./common/footer";
@@ -11,7 +10,7 @@ export default function Layout({ onLoginClick, onSignupClick }) {
         onSignupClick={onSignupClick}
       />
 
-      <main className="flex-grow">
+      <main className="flex-grow dark:bg-gray-800 dark:text-white">
         <div className="App dark:bg-gray-800 dark:text-white">
           <Outlet />
         </div>
